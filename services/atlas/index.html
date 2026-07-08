@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oracle Atlas</title>
+<link rel="stylesheet" href="lib/maplibre-gl.css">
+<style>
+  html, body { margin: 0; height: 100%; }
+  #map { position: absolute; inset: 0; }
+  #panel {
+    position: absolute; top: 10px; left: 10px; z-index: 10;
+    display: flex; gap: 6px; align-items: center;
+    font-family: system-ui, sans-serif;
+  }
+  #search {
+    width: 260px; padding: 7px 10px; border: 1px solid #bbb; border-radius: 6px;
+    font-size: 14px; background: rgba(255,255,255,.95);
+  }
+  #flavor {
+    padding: 7px 6px; border: 1px solid #bbb; border-radius: 6px;
+    font-size: 14px; background: rgba(255,255,255,.95);
+  }
+  #results {
+    position: absolute; top: 46px; left: 10px; z-index: 10; width: 300px;
+    font-family: system-ui, sans-serif; font-size: 13px;
+    background: rgba(255,255,255,.97); border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25); overflow: hidden;
+  }
+  #results div { padding: 7px 10px; cursor: pointer; border-bottom: 1px solid #eee; }
+  #results div:hover { background: #eef4ff; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="panel">
+  <input id="search" type="text" placeholder="Search places (offline)…" autocomplete="off">
+  <select id="flavor">
+    <option value="light" selected>Light</option>
+    <option value="dark">Dark</option>
+    <option value="white">White</option>
+    <option value="grayscale">Grayscale</option>
+    <option value="black">Black</option>
+  </select>
+  <label id="topolabel" style="background:rgba(255,255,255,.95);padding:6px 10px;border:1px solid #bbb;border-radius:6px;font-size:14px;">
+    <input type="checkbox" id="topo"> Topo
+  </label>
+</div>
+<div id="results" hidden></div>
+<script src="lib/maplibre-gl.js"></script>
+<script src="lib/basemaps.js"></script>
+<script src="lib/maplibre-contour.min.js"></script>
+<script>
+const TILES = "http://" + location.hostname + ":8096/planet/{z}/{x}/{y}.mvt";
+const PHOTON = "http://" + location.hostname + ":2322";
+const ORIGIN = location.origin;
+
+const TERRAIN = "http://" + location.hostname + ":8096/terrain/{z}/{x}/{y}.png";
+
+// maplibre-contour: decodes terrarium DEM tiles, generates contours client-side
+const demSource = new mlcontour.DemSource({
+  url: TERRAIN,
+  encoding: "terrarium",
+  maxzoom: 12,
+});
+demSource.setupMaplibre(maplibregl);
+
+function makeStyle(flavorName, topo) {
+  const layers = basemaps.layers("protomaps", basemaps.namedFlavor(flavorName), { lang: "en" });
+  const style = {
+    version: 8,
+    glyphs: ORIGIN + "/fonts/{fontstack}/{range}.pbf",
+    sprite: ORIGIN + "/sprites/v4/" + flavorName,
+    sources: {
+      protomaps: {
+        type: "vector",
+        tiles: [TILES],
+        maxzoom: 15,
+        attribution: "© OpenStreetMap (offline Protomaps build)"
+      }
+    },
+    layers: layers
+  };
+  if (!topo) return style;
+
+  style.sources.dem = {
+    type: "raster-dem",
+    tiles: [demSource.sharedDemProtocolUrl],
+    encoding: "terrarium",
+    maxzoom: 12,
+    tileSize: 256
+  };
+  style.sources.contours = {
+    type: "vector",
+    tiles: [
+      demSource.contourProtocolUrl({
+        multiplier: 1,
+        thresholds: { 9: [500, 2500], 11: [200, 1000], 12: [100, 500], 14: [50, 200], 15: [20, 100] },
+        elevationKey: "ele",
+        levelKey: "level",
+        contourLayer: "contours"
+      })
+    ],
+    maxzoom: 16
+  };
+  const hillshade = {
+    id: "hillshade", type: "hillshade", source: "dem",
+    paint: { "hillshade-exaggeration": 0.35, "hillshade-shadow-color": "#473B24" }
+  };
+  const contourLine = {
+    id: "contour-lines", type: "line", source: "contours", "source-layer": "contours",
+    paint: {
+      "line-color": "rgba(130, 90, 40, 0.5)",
+      "line-width": ["match", ["get", "level"], 1, 1.2, 0.5]
+    }
+  };
+  const contourLabel = {
+    id: "contour-labels", type: "symbol", source: "contours", "source-layer": "contours",
+    filter: [">", ["get", "level"], 0],
+    layout: {
+      "symbol-placement": "line",
+      "text-field": ["concat", ["number-format", ["get", "ele"], {}], " m"],
+      "text-font": ["Noto Sans Regular"],
+      "text-size": 10
+    },
+    paint: { "text-color": "#7a5b33", "text-halo-color": "rgba(255,255,255,0.7)", "text-halo-width": 1.2 }
+  };
+  // hillshade + contours above ground fills, below roads/labels
+  const anchor = layers.findIndex(l => l.type === "symbol" || (l.id && l.id.startsWith("roads")));
+  const at = anchor === -1 ? layers.length : anchor;
+  style.layers = [...layers.slice(0, at), hillshade, contourLine, ...layers.slice(at), contourLabel];
+  return style;
+}
+
+const map = new maplibregl.Map({
+  container: "map",
+  style: makeStyle("light", false),
+  center: [-98, 39.5],
+  zoom: 4
+});
+map.addControl(new maplibregl.NavigationControl(), "top-right");
+map.addControl(new maplibregl.ScaleControl({ unit: "imperial" }));
+
+function refreshStyle() {
+  map.setStyle(makeStyle(
+    document.getElementById("flavor").value,
+    document.getElementById("topo").checked
+  ));
+}
+document.getElementById("flavor").addEventListener("change", refreshStyle);
+document.getElementById("topo").addEventListener("change", refreshStyle);
+
+// disable the topo toggle if the terrain archive isn't being served yet
+fetch("http://" + location.hostname + ":8096/terrain/0/0/0.png", { method: "HEAD" })
+  .catch(() => null)
+  .then(r => {
+    if (!r || !r.ok) {
+      const cb = document.getElementById("topo");
+      cb.disabled = true;
+      document.getElementById("topolabel").title = "terrain tiles not available yet";
+    }
+  });
+
+// --- Photon search (offline geocoder) ---
+const box = document.getElementById("search");
+const results = document.getElementById("results");
+let marker = null, timer = null;
+
+function showResults(features) {
+  results.innerHTML = "";
+  results.hidden = features.length === 0;
+  for (const f of features) {
+    const p = f.properties, el = document.createElement("div");
+    const bits = [p.name, p.city, p.state, p.country].filter(Boolean);
+    el.textContent = bits.join(", ") + (p.osm_value ? "  ·  " + p.osm_value : "");
+    el.onclick = () => {
+      results.hidden = true;
+      const [lon, lat] = f.geometry.coordinates;
+      if (marker) marker.remove();
+      marker = new maplibregl.Marker().setLngLat([lon, lat]).addTo(map);
+      if (p.extent) {
+        const [w, n, e2, s] = p.extent;
+        map.fitBounds([[w, s], [e2, n]], { padding: 60, maxZoom: 16 });
+      } else {
+        map.flyTo({ center: [lon, lat], zoom: 13 });
+      }
+    };
+    results.appendChild(el);
+  }
+}
+
+box.addEventListener("input", () => {
+  clearTimeout(timer);
+  const q = box.value.trim();
+  if (q.length < 3) { results.hidden = true; return; }
+  timer = setTimeout(async () => {
+    try {
+      const c = map.getCenter();
+      const r = await fetch(PHOTON + "/api?q=" + encodeURIComponent(q)
+        + "&limit=8&lat=" + c.lat.toFixed(4) + "&lon=" + c.lng.toFixed(4));
+      if (r.ok) showResults((await r.json()).features || []);
+    } catch (e) { /* photon not up — search silently disabled */ }
+  }, 250);
+});
+document.addEventListener("click", e => {
+  if (!results.contains(e.target) && e.target !== box) results.hidden = true;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{"id": "h01", "cat": "route", "q": "What is the driving distance in kilometers from Flagstaff, Arizona to Sedona, Arizona?", "grade": {"type": "number", "value": 47.2, "tol": 3}}
+{"id": "h02", "cat": "route", "q": "What is the driving distance in kilometers from Duluth, Minnesota to Thunder Bay, Ontario?", "grade": {"type": "number", "value": 303.6, "tol": 15}}
+{"id": "h03", "cat": "elevation", "q": "What is the ground elevation in meters at latitude 44.2705, longitude -71.3032?", "grade": {"type": "number", "value": 1915, "tol": 30}}
+{"id": "h04", "cat": "elevation", "q": "What is the ground elevation in meters at latitude 36.0544, longitude -112.1401?", "grade": {"type": "number", "value": 2098, "tol": 30}}
+{"id": "h05", "cat": "poi", "q": "What is the name of the hospital closest to the Space Needle in Seattle?", "grade": {"type": "contains", "value": "virginia mason"}}
+{"id": "h06", "cat": "poi", "q": "What is the name of the campground or campsite closest to Old Faithful in Yellowstone?", "grade": {"type": "contains", "value": "mallard lake"}}
+{"id": "h07", "cat": "almanac", "q": "At what time does the sun rise in Denver, Colorado on 2026-08-01? Use UTC offset -6.", "grade": {"type": "any_of", "values": ["5:59", "05:59", "6:00", "06:00"]}}
+{"id": "h08", "cat": "almanac", "q": "What is the day length in Denver, Colorado on 2026-08-01, in hours and minutes? Use UTC offset -6.", "grade": {"type": "any_of", "values": ["14 h 13", "14h13", "14 hours and 13", "14:13", "14 hours, 13"]}}
+{"id": "h09", "cat": "multi", "q": "How many kilometers is the drive from Duluth, Minnesota to Thunder Bay, Ontario, and what is the elevation in meters of Thunder Bay?", "grade": {"type": "number", "value": 303.6, "tol": 15}}
+{"id": "h10", "cat": "moon", "q": "What is the date of the next full moon after 2026-07-08?", "grade": {"type": "any_of", "values": ["july 29", "2026-07-29", "07-29", "29 july"]}}

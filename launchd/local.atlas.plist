@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>local.atlas</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>~/.local/ai-services/atlas/serve-web.sh</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>~/.local/ai-services/atlas/logs/atlas.log</string>
+    <key>StandardErrorPath</key>
+    <string>~/.local/ai-services/atlas/logs/atlas.err</string>
+</dict>
+</plist>

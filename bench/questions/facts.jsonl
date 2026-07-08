@@ -1,0 +1,35 @@
+{"id": "f01", "cat": "history", "q": "In what year did the Chernobyl nuclear disaster occur?", "grade": {"type": "contains", "value": "1986"}}
+{"id": "f02", "cat": "science", "q": "What metal has the chemical symbol Au?", "grade": {"type": "contains", "value": "gold"}}
+{"id": "f03", "cat": "science", "q": "What is the speed of light in a vacuum in meters per second?", "grade": {"type": "any_of", "values": ["299,792", "299792", "3.0 x 10^8", "3×10^8"]}}
+{"id": "f04", "cat": "medicine", "q": "Who discovered penicillin?", "grade": {"type": "contains", "value": "fleming"}}
+{"id": "f05", "cat": "history", "q": "In what year did Apollo 11 land the first humans on the Moon?", "grade": {"type": "contains", "value": "1969"}}
+{"id": "f06", "cat": "literature", "q": "Who wrote the novel Moby-Dick?", "grade": {"type": "contains", "value": "melville"}}
+{"id": "f07", "cat": "geography", "q": "What is the capital of Australia?", "grade": {"type": "contains", "value": "canberra"}}
+{"id": "f08", "cat": "geography", "q": "What is the longest river in Africa?", "grade": {"type": "contains", "value": "nile"}}
+{"id": "f09", "cat": "medicine", "q": "What is normal human body temperature in degrees Celsius?", "grade": {"type": "number", "value": 37, "tol": 0.6}}
+{"id": "f10", "cat": "science", "q": "At what temperature in Fahrenheit does water boil at sea level?", "grade": {"type": "contains", "value": "212"}}
+{"id": "f11", "cat": "science", "q": "What is the shape of the DNA molecule called?", "grade": {"type": "contains", "value": "double helix"}}
+{"id": "f12", "cat": "medicine", "q": "How many bones are in the adult human body?", "grade": {"type": "contains", "value": "206"}}
+{"id": "f13", "cat": "history", "q": "In what year did World War II end?", "grade": {"type": "contains", "value": "1945"}}
+{"id": "f14", "cat": "history", "q": "Who is credited with inventing the telephone?", "grade": {"type": "contains", "value": "bell"}}
+{"id": "f15", "cat": "science", "q": "What is the chemical formula of table salt?", "grade": {"type": "any_of", "values": ["nacl", "sodium chloride"]}}
+{"id": "f16", "cat": "science", "q": "What is the largest planet in the Solar System?", "grade": {"type": "contains", "value": "jupiter"}}
+{"id": "f17", "cat": "geography", "q": "How tall is Mount Everest in meters?", "grade": {"type": "number", "value": 8849, "tol": 15}}
+{"id": "f18", "cat": "history", "q": "In what year was the Battle of Hastings?", "grade": {"type": "contains", "value": "1066"}}
+{"id": "f19", "cat": "science", "q": "What is the first element in the periodic table?", "grade": {"type": "contains", "value": "hydrogen"}}
+{"id": "f20", "cat": "medicine", "q": "How many chambers does the human heart have?", "grade": {"type": "any_of", "values": ["four", "4"]}}
+{"id": "f21", "cat": "medicine", "q": "Which vitamin does human skin produce when exposed to sunlight?", "grade": {"type": "contains", "value": "vitamin d"}}
+{"id": "f22", "cat": "medicine", "q": "What disease is caused by a severe deficiency of vitamin C?", "grade": {"type": "contains", "value": "scurvy"}}
+{"id": "f23", "cat": "science", "q": "Which planet is known as the Red Planet?", "grade": {"type": "contains", "value": "mars"}}
+{"id": "f24", "cat": "history", "q": "In what year did the Titanic sink?", "grade": {"type": "contains", "value": "1912"}}
+{"id": "f25", "cat": "literature", "q": "Who wrote Pride and Prejudice?", "grade": {"type": "contains", "value": "austen"}}
+{"id": "f26", "cat": "geography", "q": "What is the tallest mountain in North America?", "grade": {"type": "any_of", "values": ["denali", "mckinley"]}}
+{"id": "f27", "cat": "science", "q": "What gas do plants absorb from the air for photosynthesis?", "grade": {"type": "any_of", "values": ["carbon dioxide", "co2"]}}
+{"id": "f28", "cat": "science", "q": "What is the freezing point of water in Fahrenheit?", "grade": {"type": "contains", "value": "32"}}
+{"id": "f29", "cat": "art", "q": "Who painted the Mona Lisa?", "grade": {"type": "any_of", "values": ["da vinci", "leonardo"]}}
+{"id": "f30", "cat": "geography", "q": "What is the currency of Japan?", "grade": {"type": "contains", "value": "yen"}}
+{"id": "f31", "cat": "science", "q": "About how many minutes does light take to travel from the Sun to Earth?", "grade": {"type": "number", "value": 8, "tol": 1}}
+{"id": "f32", "cat": "medicine", "q": "Which organ in the human body produces insulin?", "grade": {"type": "contains", "value": "pancreas"}}
+{"id": "f33", "cat": "history", "q": "Which country gifted the Statue of Liberty to the United States?", "grade": {"type": "contains", "value": "france"}}
+{"id": "f34", "cat": "science", "q": "What is the hardest naturally occurring material?", "grade": {"type": "contains", "value": "diamond"}}
+{"id": "f35", "cat": "medicine", "q": "What blood type is the universal donor?", "grade": {"type": "any_of", "values": ["o negative", "o-", "type o neg"]}}

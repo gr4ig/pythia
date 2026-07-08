@@ -1,0 +1,13 @@
+# data and third-party assets are fetched, never committed
+services/atlas/web/
+services/almanac/de421.bsp
+*.mbtiles* 
+*.pmtiles
+*.sqlite
+*.zim
+*.bsp
+*.log
+venv/
+__pycache__/
+results/
+.DS_Store

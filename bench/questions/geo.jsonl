@@ -1,0 +1,12 @@
+{"id": "g01", "cat": "route", "q": "What is the driving distance in kilometers from the Empire State Building to Yankee Stadium?", "grade": {"type": "number", "value": 14.7, "tol": 4}}
+{"id": "g02", "cat": "route", "q": "What is the driving distance in kilometers from Los Angeles International Airport to the Las Vegas Strip?", "grade": {"type": "number", "value": 430, "tol": 50}}
+{"id": "g03", "cat": "route", "q": "What is the driving distance in kilometers from the CN Tower in Toronto to Niagara Falls, Ontario?", "grade": {"type": "number", "value": 130, "tol": 25}}
+{"id": "g04", "cat": "route", "q": "What is the driving distance in kilometers from the Space Needle to Pike Place Market in Seattle?", "grade": {"type": "number", "value": 2.5, "tol": 2}}
+{"id": "g05", "cat": "route", "q": "What is the driving distance in kilometers from the Golden Gate Bridge to Fisherman's Wharf in San Francisco?", "grade": {"type": "number", "value": 8, "tol": 4}}
+{"id": "g06", "cat": "elevation", "q": "What is the elevation of Denver, Colorado in meters?", "grade": {"type": "number", "value": 1600, "tol": 80}}
+{"id": "g07", "cat": "elevation", "q": "What is the elevation of the summit of Mount Whitney in meters?", "grade": {"type": "number", "value": 4420, "tol": 80}}
+{"id": "g08", "cat": "elevation", "q": "What is the elevation of Badwater Basin in Death Valley in meters?", "grade": {"type": "number", "value": -85, "tol": 40}}
+{"id": "g09", "cat": "elevation", "q": "What is the elevation of the summit of Pikes Peak in meters?", "grade": {"type": "number", "value": 4302, "tol": 90}}
+{"id": "g10", "cat": "reverse", "q": "What mountain is located at latitude 46.8523, longitude -121.7603?", "grade": {"type": "contains", "value": "rainier"}}
+{"id": "g11", "cat": "geocode", "q": "What is the approximate latitude of the Gateway Arch in St. Louis?", "grade": {"type": "number", "value": 38.62, "tol": 0.2}}
+{"id": "g12", "cat": "multi", "q": "Approximately how many meters higher in elevation is Denver, Colorado than St. Louis, Missouri?", "grade": {"type": "number", "value": 1460, "tol": 250}}
