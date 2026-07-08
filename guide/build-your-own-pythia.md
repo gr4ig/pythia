@@ -325,6 +325,44 @@ calendar; entropy doesn't send reminders.
 
 ---
 
+## Phase 8 — Memory and agency (optional, but it changes what you have)
+
+Everything so far makes the system *knowledgeable*. Two more pieces make it a
+colleague rather than a reference desk:
+
+**A brain for derived content.** The library holds what humanity knows; give
+your system a place to file what *it* figures out. Ours is a plain
+[Obsidian](https://obsidian.md) vault in PARA structure (Inbox / Areas /
+Projects / Resources / Archives), with a file standard (Markdown + YAML
+frontmatter: title, created, tags, status, description) written into an Open
+WebUI skill so the model files things correctly on its own. The write path is
+Open WebUI's terminal integration pinned to the vault directory; the read path
+is you, in Obsidian. Research reports, trip plans, syntheses — they accumulate
+into a knowledge garden the static library can never contain, because it's
+about *your* questions.
+
+**An offline coding agent.** [OpenCode](https://opencode.ai) provides a
+Claude Code-style agentic coding environment that runs against local models.
+Point it at your Ollama endpoint in `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": { "baseURL": "http://localhost:11434/v1" },
+      "models": { "your-model:tag": { "name": "Your Model" } }
+    }
+  },
+  "model": "ollama/your-model:tag"
+}
+```
+
+With these two, the build completes a triad worth naming: **cognition** (the
+models), **memory** (a vault that grows), and **agency** (an agent that can
+write and run code) — all with the network cable unplugged.
+
 ## Bill of materials (our build, for calibration)
 
 | Component | Size | Source cost |
