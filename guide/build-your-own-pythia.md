@@ -8,6 +8,12 @@ exactly and get what we got, or treat each phase as a module and adapt it to
 your hardware, your region, and your storage budget. Adaptation notes follow
 every phase.
 
+
+> **Working code for everything below:** [github.com/gr4ig/pythia](https://github.com/gr4ig/pythia) —
+> every service script, LLM tool, the benchmark harness, and the ops tooling,
+> exactly as we run them. Clone it and follow along, or fork it and make it
+> yours.
+
 Two ground rules before you start, both learned the hard way:
 
 1. **Storage has a grain.** Static data — wiki archives, map tiles — streams
@@ -115,7 +121,7 @@ pattern, and it's cleaner everywhere): keep a plain-text file listing one ZIM
 path per line, and have your service script pass those paths to `kiwix-serve`.
 Adding a book = append a line, restart the service.
 
-**Wire it to the LLM** with an Open WebUI tool exposing three functions:
+**Wire it to the LLM** with an Open WebUI tool ([`services/kiwix/`](https://github.com/gr4ig/pythia/tree/main/services/kiwix) in the repo) exposing three functions:
 `list_books()`, `search(query)` (kiwix-serve's `/search?pattern=…&format=xml`
 across all books), and `get_article(title, book)` (fetch, strip HTML, truncate
 to ~12K chars). Two gotchas from our build: pass raw bytes to your HTML parser
@@ -145,7 +151,7 @@ is. It cannot know it's 47 km from Flagstaff by road — ours confidently said
 Prebuilt planet index: `https://download1.graphhopper.com/public/photon-db-planet-1.0-latest.tar.bz2`
 — 61 GB compressed, ~90 GB extracted, 286M places, rebuilt weekly.
 
-Three rules from our build:
+Our serve script, LLM tool, and installer: [`services/photon/`](https://github.com/gr4ig/pythia/tree/main/services/photon). Three rules from our build:
 
 1. **The live index goes on internal storage.** Photon runs an embedded
    OpenSearch node; on our USB SSD every cluster-state fsync took 10–16 s and
@@ -178,7 +184,7 @@ distances correct, every instruction pointing at nothing. The only symptom is
 one `osmdata_counts.bin` error line deep in the log. Always rebuild all stages
 in one invocation, and grep the build log before trusting the output.
 
-**Verify with names, not just status codes:** request a route and check the
+Our tool: [`services/valhalla/`](https://github.com/gr4ig/pythia/tree/main/services/valhalla). **Verify with names, not just status codes:** request a route and check the
 turn instructions contain actual street names ("Turn left onto **Main Street**"),
 in your region and across any borders your extract includes.
 
@@ -209,7 +215,7 @@ name matches** (or "hospital" returns veterinary hospitals before the actual
 ER, as ours did on the first pass). Our North America result: 11.2M features
 filtered to 4.19M POIs in an 808 MB database.
 
-The query tool: R-tree bounding-box prefilter → haversine distance → sort by
+The loader and query tool: [`services/poi/`](https://github.com/gr4ig/pythia/tree/main/services/poi). The query tool: R-tree bounding-box prefilter → haversine distance → sort by
 (match-rank, distance), with a synonym map from plain words ("gas station",
 "urgent care", "campground") to OSM tags.
 
@@ -218,7 +224,7 @@ The query tool: R-tree bounding-box prefilter → haversine distance → sort by
 The best value-per-gigabyte in the entire system: **[Skyfield](https://rhodesmill.org/skyfield/)**
 plus the JPL DE421 ephemeris — a 17 MB file valid for decades. Sunrise, sunset,
 day length, moon phase, next full/new moon, for any coordinates and any date,
-computed in milliseconds. Verify against published sun times for your city;
+computed in milliseconds ([`services/almanac/`](https://github.com/gr4ig/pythia/tree/main/services/almanac)). Verify against published sun times for your city;
 ours matched to the minute.
 
 ---
@@ -250,7 +256,7 @@ on the map, client-side contour lines ([maplibre-contour](https://github.com/ont
 and a `get_elevation(lat, lon)` tool for the model. Elevation data never needs
 refreshing — mountains don't move.
 
-Verify against ground truth: our checks — Mt. Whitney 4412 m (actual 4421),
+Our atlas page, terrain downloader, and elevation tool: [`services/atlas/`](https://github.com/gr4ig/pythia/tree/main/services/atlas) (run [`scripts/fetch-assets.sh`](https://github.com/gr4ig/pythia/blob/main/scripts/fetch-assets.sh) for the web libraries). Verify against ground truth: our checks — Mt. Whitney 4412 m (actual 4421),
 Death Valley −81 m, Denver 1597 m — all landed within the tile resolution.
 
 ---
@@ -259,7 +265,7 @@ Death Valley −81 m, Denver 1597 m — all landed within the tile resolution.
 
 Each capability becomes an Open WebUI tool: a Python class with docstringed,
 type-hinted methods (the docstrings become the tool schema the model sees).
-Ours, as a checklist: wiki search/fetch, geocode/reverse-geocode, route,
+All six of ours, with installers, are in the repo's `services/` directories, and the chaining skill is [`openwebui/`](https://github.com/gr4ig/pythia/tree/main/openwebui). Ours, as a checklist: wiki search/fetch, geocode/reverse-geocode, route,
 elevation + profile, places-nearby, sun/moon. Keep result strings compact and
 information-dense — they're going into a context window.
 
@@ -279,7 +285,7 @@ Two integration lessons:
 
 ## Phase 6 — Prove it works (don't skip this)
 
-Our first benchmark said tools made the model *worse* — 87% with tools versus
+The complete harness — agent loop, graders, question sets — is [`bench/`](https://github.com/gr4ig/pythia/tree/main/bench). Our first benchmark said tools made the model *worse* — 87% with tools versus
 100% without. Both numbers were artifacts, and finding out why taught us more
 than a clean run would have:
 
@@ -310,8 +316,8 @@ tools. That table — not the feature list — is the proof your build works.
 | Terrain | never | never |
 
 Staleness is cheap for reference knowledge — a quarterly ~350–400 GB refresh
-keeps the system within three months of the live world. Two scripts worth
-writing on day one: a **refresh script** (per-source: download → verify →
+keeps the system within three months of the live world. Ours are [`ops/`](https://github.com/gr4ig/pythia/tree/main/ops) in the repo — two scripts worth
+adopting on day one: a **refresh script** (per-source: download → verify →
 swap → roll back on failure; every swap keeps the old data until the new data
 proves itself) and a **clone script** (rsync of services + data to a spare
 drive — our full system replicates in an afternoon). Put the refresh on a
@@ -350,5 +356,6 @@ Attribution strings in your map UI and tool citations cover the common cases.
 ---
 
 *This guide documents the build described in "AI Data Center in a Backpack,
-Parts 1–2." Follow it verbatim or fork it freely — the entire point of a
-backpack data center is that it's yours.*
+Parts 1–2." All code lives at [github.com/gr4ig/pythia](https://github.com/gr4ig/pythia). Follow it
+verbatim or fork it freely — the entire point of a backpack data center is
+that it's yours.*
