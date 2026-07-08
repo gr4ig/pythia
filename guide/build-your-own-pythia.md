@@ -341,9 +341,18 @@ is you, in Obsidian. Research reports, trip plans, syntheses — they accumulate
 into a knowledge garden the static library can never contain, because it's
 about *your* questions.
 
-**An offline coding agent.** [OpenCode](https://opencode.ai) provides a
-Claude Code-style agentic coding environment that runs against local models.
-Point it at your Ollama endpoint in `~/.config/opencode/opencode.json`:
+**Agency, from two angles.** The first you may already have: Open WebUI has
+evolved well past a chat interface. With its terminal integration, code
+execution, and the tools you built in Phase 5, the model can act — run
+commands, write files into your vault, execute code — right in the flow of a
+conversation. Think of it as the everyday hands: not built for hours of
+autonomous work, but not far off a Claude Cowork-style collaborator, entirely
+offline.
+
+The second is a dedicated coding agent for longer, autonomous runs:
+[OpenCode](https://opencode.ai) provides a Claude Code-style agentic
+environment against local models. Point it at your Ollama endpoint in
+`~/.config/opencode/opencode.json`:
 
 ```json
 {
@@ -359,9 +368,10 @@ Point it at your Ollama endpoint in `~/.config/opencode/opencode.json`:
 }
 ```
 
-With these two, the build completes a triad worth naming: **cognition** (the
-models), **memory** (a vault that grows), and **agency** (an agent that can
-write and run code) — all with the network cable unplugged.
+With these, the build completes a triad worth naming: **cognition** (the
+models), **memory** (a vault that grows), and **agency** (hands in the
+conversation, plus an agent for the long jobs) — all with the network cable
+unplugged.
 
 ## Bill of materials (our build, for calibration)
 
