@@ -46,7 +46,7 @@ Linux users skip this entire class of problem.
 
 **Hardware floor:** any machine that runs a 7–12B parameter model comfortably —
 16 GB RAM minimum, 32+ GB recommended. We used an Apple M5 Pro with 48 GB RAM
-and a 4 TB USB SSD (~$300); an x86 Linux box with a mid-range GPU works the
+and a 5 TB USB SSD (~$300); an x86 Linux box with a mid-range GPU works the
 same way, minus the TCC pain. All software below runs on macOS and Linux.
 
 ---
@@ -378,7 +378,7 @@ unplugged.
 | Component | Size | Source cost |
 |---|---|---|
 | Laptop (Apple M5 Pro, 48 GB) | — | consumer hardware |
-| 4 TB external USB SSD | — | ~$300 class |
+| 5 TB external USB SSD | — | ~$300 class |
 | Wiki library (35 ZIMs) | 463 GiB | free |
 | LLM weights (5 models) | 100 GiB | free |
 | Photon planet index | 88 GiB live + 57 archive | free |
